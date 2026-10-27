@@ -61,7 +61,7 @@ def crear_game(conn):
         print("Error: Todos los campos son obligatorios.")
         return
 
-    trivia_id = obtener_o_crear_Genero(cursor, conn, trivia_pregunta)
+    trivia_id = obtener_o_crear_trivia(cursor, conn, trivia_pregunta)
     cursor.execute(
         "INSERT INTO questions (pregunta, respuesta, trivia_id) VALUES (?, ?, ?)",
         (pregunta, respuesta, trivia_id),
@@ -123,7 +123,7 @@ def buscar_trivia(conn):
         print(f"ID: {game_id} | Pregunta: {pregunta} | Respuesta: {respuesta} | Genero: {trivia}")
 
 
-def actualizar_gamee(conn):
+def actualizar_game(conn):
     cursor = conn.cursor()
     print("\n--- Actualizar Trivia ---")
     game_id_input = input("Ingresa el ID del Trivia a actualizar: ").strip()
@@ -163,7 +163,7 @@ def actualizar_gamee(conn):
     print("Trivia actualizado correctamente.")
 
 
-def eliminar_gamee(conn):
+def eliminar_game(conn):
     cursor = conn.cursor()
     print("\n--- Eliminar Trivia ---")
     game_id_input = input("Ingresa el ID del Trivia a eliminar: ").strip()
@@ -220,7 +220,7 @@ def main():
 
     while True:
         print("\n==============================")
-        print("       CRUD DE TriviaS")
+        print("       CRUD DE Trivias")
         print("==============================")
         print("1. Crear Trivia")
         print("2. Listar Trivias")
