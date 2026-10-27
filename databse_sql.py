@@ -147,17 +147,17 @@ def actualizar_game(conn):
         return
 
     pregunta_actual, respuesta_actual, genero_actual = game
-    print(f"Valores actuales -> Pregunta: {Pregunta_actual} | Respuesta: {Respuesta_actual} | Genero: {Genero_actual}")
+    print(f"Valores actuales -> Pregunta: {pregunta_actual} | Respuesta: {respuesta_actual} | Genero: {genero_actual}")
 
     nuevo_pregunta = input("Nuevo Pregunta (Enter para conservar): ").strip() or Pregunta_actual
     nuevo_respuesta = input("Nuevo Respuesta (Enter para conservar): ").strip() or Respuesta_actual
     nueva_Genero = input("Nueva Genero (Enter para conservar): ").strip() or Genero_actual
 
-    trivia_id = obtener_o_crear_Genero(cursor, conn, nueva_Genero)
+    trivia_id = obtener_o_crear_trivia(cursor, conn, nueva_Genero)
 
     cursor.execute(
         "UPDATE questions SET pregunta = ?, respuesta = ?, trivia_id = ? WHERE id = ?",
-        (nuevo_Pregunta, nuevo_Respuesta, trivia_id, game_id),
+        (nuevo_pregunta, nuevo_respuesta, trivia_id, game_id),
     )
     conn.commit()
     print("Trivia actualizado correctamente.")
@@ -181,11 +181,11 @@ def eliminar_game(conn):
         print("Trivia no encontrado.")
 
 
-def obtener_questions_Genero(conn, trivia_pregunta=None):
+def obtener_questions_genero(conn, trivia_pregunta=None):
     cursor = conn.cursor()
     if trivia_pregunta is None:
         print("\n--- Trivias por Genero ---")
-        trivia_pregunta = input("Pregunta de la Genero: ").strip()
+        trivia_pregunta = input("Introduzca el Genero: ").strip()
 
     if not trivia_pregunta:
         print("Pregunta de Genero no proporcionado.")
@@ -243,7 +243,7 @@ def main():
         elif opcion == "5":
             eliminar_game(conn)
         elif opcion == "6":
-            obtener_questions_Genero(conn)
+            obtener_questions_genero(conn)
         elif opcion == "7":
             print("\nCerrando conexión y saliendo del programa...")
             break
