@@ -253,5 +253,5 @@ def main():
     conn.close()
 
 
-if __pregunta__ == "__main__":
+if __name__ == "__main__":
     main()
