@@ -1,12 +1,18 @@
 import sqlite3
+from fastapi import FastAPI, HTTPException
+from fastapi.templating import Jinja2Templates
+# Directorio raíz del proyecto — se usa para resolver rutas a templates y la DB
+BASE_DIR = Path(_file_).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+# Configuración de Jinja2 — busca los templates HTML en la carpeta "templates/"
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-DATABASE_pregunta = "questions.db"
+app = FastAPI()
 
-
-def conectar_db():
-    conn = sqlite3.connect(DATABASE_pregunta)
-    conn.execute("PRAGMA foreign_keys = ON;")
-    return conn
+# Connect to the SQLite database
+conn = sqlite3.connect('questions.db')
+cursor = conn.cursor()
 
 
 def inicializar_db(conn):
@@ -49,13 +55,11 @@ def obtener_o_crear_trivia(cursor, conn, trivia_pregunta):
     conn.commit()
     return cursor.lastrowid
 
-
-def crear_game(conn):
+@app.post("/questions/", response_model=dict)
+async def crear_game( pregunta: str, respuesta: str, trivia_pregunta: str):
     cursor = conn.cursor()
     print("\n--- Crear Trivia ---")
-    pregunta = input("Introduzca la pregunta: ").strip()
-    respuesta = input("Introduzca la respuesta: ").strip()
-    trivia_pregunta = input("Genero de la trivia ").strip()
+    
 
     if not pregunta or not respuesta or not trivia_pregunta:
         print("Error: Todos los campos son obligatorios.")
@@ -69,8 +73,8 @@ def crear_game(conn):
     conn.commit()
     print(f"Trivia '{pregunta}' creada con éxito (ID: {cursor.lastrowid}).")
 
-
-def listar_questions(conn):
+@app.get("/questions/", response_model=list)
+async def listar_questions():
     cursor = conn.cursor()
     print("\n--- Listado de Trivia ---")
     query = """
@@ -88,11 +92,10 @@ def listar_questions(conn):
     for game_id, pregunta, respuesta, trivia in questions:
         print(f"ID: {game_id} | Pregunta: {pregunta} | Respuesta: {respuesta} | Genero: {trivia}")
 
-
-def buscar_trivia(conn):
+@app.get("/questions/{id}")
+async def buscar_trivia( busqueda: int):
     cursor = conn.cursor()
     print("\n--- Buscar  ---")
-    busqueda = input("Ingresa el nombre o ID de la trivia: ").strip()
     if not busqueda:
         print("Búsqueda cancelada.")
         return
@@ -122,11 +125,10 @@ def buscar_trivia(conn):
     for game_id, pregunta, respuesta, trivia in questions:
         print(f"ID: {game_id} | Pregunta: {pregunta} | Respuesta: {respuesta} | Genero: {trivia}")
 
-
-def actualizar_game(conn):
+@app.put("/questions/{id}", response_model=dict)
+async def actualizar_game(game_id_input: int, nuevo_pregunta: str, nuevo_respuesta: str, nueva_genero: str):
     cursor = conn.cursor()
     print("\n--- Actualizar Trivia ---")
-    game_id_input = input("Ingresa el ID del Trivia a actualizar: ").strip()
     if not game_id_input.isdigit():
         print("ID inválido.")
         return
@@ -149,9 +151,6 @@ def actualizar_game(conn):
     pregunta_actual, respuesta_actual, genero_actual = game
     print(f"Valores actuales -> Pregunta: {pregunta_actual} | Respuesta: {respuesta_actual} | Genero: {genero_actual}")
 
-    nuevo_pregunta = input("Nuevo Pregunta (Enter para conservar): ").strip() or Pregunta_actual
-    nuevo_respuesta = input("Nuevo Respuesta (Enter para conservar): ").strip() or Respuesta_actual
-    nueva_Genero = input("Nueva Genero (Enter para conservar): ").strip() or Genero_actual
 
     trivia_id = obtener_o_crear_trivia(cursor, conn, nueva_Genero)
 
@@ -162,11 +161,11 @@ def actualizar_game(conn):
     conn.commit()
     print("Trivia actualizado correctamente.")
 
-
-def eliminar_game(conn):
+@app.delete("/questions/{id}")
+async def eliminar_game(game_id_input: int):
     cursor = conn.cursor()
     print("\n--- Eliminar Trivia ---")
-    game_id_input = input("Ingresa el ID del Trivia a eliminar: ").strip()
+    
     if not game_id_input.isdigit():
         print("ID inválido.")
         return
@@ -180,12 +179,11 @@ def eliminar_game(conn):
     else:
         print("Trivia no encontrado.")
 
-
-def obtener_questions_genero(conn, trivia_pregunta=None):
+@app.get("/questions/", response_model=dict)
+async def obtener_questions_genero(trivia_pregunta=None):
     cursor = conn.cursor()
     if trivia_pregunta is None:
         print("\n--- Trivias por Genero ---")
-        trivia_pregunta = input("Introduzca el Genero: ").strip()
 
     if not trivia_pregunta:
         print("Pregunta de Genero no proporcionado.")
@@ -233,17 +231,27 @@ def main():
         opcion = input("\nSelecciona una opción (1-7): ").strip()
 
         if opcion == "1":
-            crear_game(conn)
+            pregunta = input("Introduzca la pregunta: ").strip()
+            respuesta = input("Introduzca la respuesta: ").strip()
+            trivia_pregunta = input("Genero de la trivia ").strip()
+            crear_game(conn, pregunta, respuesta, trivia_pregunta)
         elif opcion == "2":
             listar_questions(conn)
         elif opcion == "3":
-            buscar_game(conn)
+            busqueda = input("Ingresa el nombre o ID de la trivia: ").strip()
+            buscar_trivia(conn, busqueda)
         elif opcion == "4":
-            actualizar_game(conn)
+            game_id_input = input("Ingresa el ID del Trivia a actualizar: ").strip()
+            nuevo_pregunta = input("Nuevo Pregunta (Enter para conservar): ").strip() or pregunta_actual
+            nuevo_respuesta = input("Nuevo Respuesta (Enter para conservar): ").strip() or respuesta_actual
+            nueva_genero = input("Nueva Genero (Enter para conservar): ").strip() or genero_actual
+            actualizar_game(conn, game_id_input, nuevo_pregunta, nuevo_respuesta, nueva_genero)
         elif opcion == "5":
-            eliminar_game(conn)
+            game_id_input = input("Ingresa el ID del Trivia a eliminar: ").strip()
+            eliminar_game(conn, game_id_input)
         elif opcion == "6":
-            obtener_questions_genero(conn)
+            trivia_pregunta = input("Introduzca el Genero: ").strip()
+            obtener_questions_genero(conn, trivia_pregunta=None)
         elif opcion == "7":
             print("\nCerrando conexión y saliendo del programa...")
             break
