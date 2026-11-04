@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Crear</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input { padding: 6px; width: 300px; }
+        button { background: #8a6d00; color: white; border: none; padding: 8px 16px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Crear Trivia</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <form action="/crear" method="get" autocomplete="off">
+        <label for="pregunta">Pregunta</label>
+        <input type="text" id="pregunta" name="pregunta" required>
+
+        <label for="respuesta">Respuesta</label>
+        <input type="text" id="respuesta" name="respuesta" required>
+
+        <label for="trivia_pregunta">Género de la trivia</label>
+        <input type="text" id="trivia_pregunta" name="trivia_pregunta" required>
+
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Resultado</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1, h2 { color: #8a6d00; }
+    </style>
+</head>
+<body>
+    <h1>Resultado</h1>
+    <a href="/">← Volver al inicio</a>
+
+    {% if correcta %}
+        <h2>✅ ¡Correcto!</h2>
+        <p>"{{ respuesta_jugador }}" es la respuesta buena.</p>
+    {% else %}
+        <h2>❌ Incorrecto</h2>
+        <p>Tu respuesta fue "{{ respuesta_jugador }}"; la correcta era <strong>"{{ respuesta_correcta }}"</strong>.</p>
+    {% endif %}
+
+    <p>
+        <a href="{{ siguiente_url }}">➡️ Siguiente pregunta</a> |
+        <a href="/jugar">Menú de juego</a>
+    </p>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Detalle</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        dl { background: white; border: 1px solid #c5b565; padding: 15px; width: fit-content; }
+        dt { font-weight: bold; margin-top: 10px; }
+        dd { margin-left: 0; }
+    </style>
+</head>
+<body>
+    <h1>Detalle de la pregunta #{{ q["id"] }}</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <dl>
+        <dt>Pregunta</dt>
+        <dd>{{ q["pregunta"] }}</dd>
+
+        <dt>Respuesta</dt>
+        <dd>{{ q["respuesta"] }}</dd>
+
+        <dt>Género</dt>
+        <dd><a href="/trivia?genero={{ q['trivia'] }}">{{ q["trivia"] }}</a></dd>
+    </dl>
+
+    <a href="/questions/{{ q['id'] }}/editar">✏️ Editar</a> |
+    <a href="/questions/{{ q['id'] }}/eliminar">🗑️ Eliminar</a>
+</body>
+</html>

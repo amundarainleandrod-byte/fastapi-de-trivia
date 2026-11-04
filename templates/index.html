@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Inicio</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        nav { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #c5b565; padding: 8px; text-align: left; }
+        th { background: #ffe08a; }
+    </style>
+</head>
+<body>
+    <h1>Mis Trivias</h1>
+    <nav>
+        <a href="/crear">➕ Crear pregunta</a> |
+        <a href="/buscar">🔍 Buscar</a> |
+        <a href="/jugar">🎮 Jugar</a>
+    </nav>
+
+    {% if generos %}
+    <table>
+        <tr>
+            <th>Género</th>
+            <th>Preguntas</th>
+            <th>Acciones</th>
+        </tr>
+        {% for g in generos %}
+        <tr>
+            <td>{{ g["genero"] }}</td>
+            <td>{{ g["total"] }}</td>
+            <td>
+                <a href="/trivia?genero={{ g['genero'] | urlencode }}">👀 Ver preguntas</a>
+                <a href="/jugar?genero={{ g['genero'] | urlencode }}">🎮 Jugar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No hay géneros todavía. <a href="/crear">Crea la primera pregunta</a>.</p>
+    {% endif %}
+</body>
+</html>

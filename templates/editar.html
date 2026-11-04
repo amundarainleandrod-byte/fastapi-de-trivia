@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Editar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input { padding: 6px; width: 300px; }
+        button { background: #8a6d00; color: white; border: none; padding: 8px 16px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Editar Trivia #{{ q["id"] }}</h1>
+    <a href="/questions/{{ q['id'] }}">← Volver al detalle</a>
+
+    <form action="/questions/{{ q['id'] }}/editar" method="get" autocomplete="off">
+        <label for="nuevo_pregunta">Pregunta</label>
+        <input type="text" id="nuevo_pregunta" name="nuevo_pregunta" value="{{ q['pregunta'] }}">
+
+        <label for="nuevo_respuesta">Respuesta</label>
+        <input type="text" id="nuevo_respuesta" name="nuevo_respuesta" value="{{ q['respuesta'] }}">
+
+        <label for="nueva_genero">Género</label>
+        <input type="text" id="nueva_genero" name="nueva_genero" value="{{ q['trivia'] }}">
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+</body>
+</html>

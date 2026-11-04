@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — {{ genero or "Buscar género" }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #c5b565; padding: 8px; text-align: left; }
+        th { background: #ffe08a; }
+        input { padding: 6px; width: 250px; }
+        button { background: #8a6d00; color: white; border: none; padding: 6px 14px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Trivias por género</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <form action="/trivia" method="get" autocomplete="off">
+        <input type="text" name="genero" value="{{ genero }}" placeholder="Nombre del género">
+        <button type="submit">Ver trivias</button>
+    </form>
+
+    <p><a href="/jugar?genero={{ genero | urlencode }}">🎮 Jugar este género</a></p>
+
+    {% if genero %}
+        {% if genero_encontrado %}
+            <h2>Trivias de "{{ genero }}"</h2>
+            {% if questions %}
+            <table>
+                <tr><th>ID</th><th>Pregunta</th><th>Respuesta</th></tr>
+                {% for q in questions %}
+                <tr>
+                    <td>{{ q["id"] }}</td>
+                    <td>{{ q["pregunta"] }}</td>
+                    <td>{{ q["respuesta"] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No hay preguntas registradas para el género "{{ genero }}".</p>
+            {% endif %}
+        {% else %}
+            <p>No se encontró el género "{{ genero }}".</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

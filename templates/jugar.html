@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Jugar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1, h2 { color: #8a6d00; }
+        input { padding: 6px; width: 250px; }
+        button { background: #8a6d00; color: white; border: none; padding: 8px 16px; cursor: pointer; }
+        .marcador { background: white; border: 1px solid #c5b565; padding: 8px 15px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>🎮 Jugar Trivia</h1>
+    <a href="/">← Volver al inicio</a>
+
+    {% if not jugando %}
+        <h2>Elige cómo jugar</h2>
+
+        <form action="/jugar" method="get" autocomplete="off">
+            <input type="text" name="genero" placeholder="Nombre del género">
+            <button type="submit">Jugar con ese género</button>
+        </form>
+
+        <p>o <a href="/jugar?todas=1">▶️ Jugar con todas las preguntas</a></p>
+
+        {% if generos %}
+        <p>Géneros disponibles:</p>
+        <ul>
+            {% for g in generos %}
+            <li><a href="/jugar?genero={{ g | urlencode }}">{{ g }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Aún no hay géneros. <a href="/crear">Crea primero una pregunta</a>.</p>
+        {% endif %}
+
+    {% elif not genero_encontrado %}
+        <p>No se encontró el género "{{ genero }}". <a href="/jugar">Intenta con otro</a>.</p>
+
+    {% elif terminado %}
+        {% if total == 0 %}
+            <p>No hay preguntas registradas para jugar.</p>
+        {% else %}
+            <h2>🎉 ¡Juego terminado!</h2>
+            <p>Acertaste <strong>{{ aciertos }}</strong> de <strong>{{ total }}</strong> preguntas.</p>
+        {% endif %}
+        <p>
+            <a href="/jugar?genero={{ genero | urlencode }}&todas={{ todas }}&pos=0&aciertos=0">🔄 Jugar otra vez</a> |
+            <a href="/jugar">Menú de juego</a>
+        </p>
+
+    {% elif pregunta %}
+        <div class="marcador">Pregunta {{ pos + 1 }} de {{ total }} — Aciertos: {{ aciertos }}</div>
+
+        <form action="/jugar/responder" method="get" autocomplete="off">
+            <input type="hidden" name="pregunta_id" value="{{ pregunta['id'] }}">
+            <input type="hidden" name="pos" value="{{ pos }}">
+            <input type="hidden" name="aciertos" value="{{ aciertos }}">
+            {% if genero %}<input type="hidden" name="genero" value="{{ genero }}">{% endif %}
+            {% if todas %}<input type="hidden" name="todas" value="{{ todas }}">{% endif %}
+
+            <h2>{{ pregunta["pregunta"] }}</h2>
+            <input type="text" name="respuesta" required placeholder="Tu respuesta">
+            <button type="submit">Responder</button>
+        </form>
+    {% endif %}
+</body>
+</html>
