@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin — Trivias de usuarios</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        h2 { color: #8a6d00; margin-bottom: 5px; }
+        table { border-collapse: collapse; background: white; margin-bottom: 20px; }
+        th, td { border: 1px solid #c5b565; padding: 8px; text-align: left; }
+        th { background: #ffe08a; }
+    </style>
+</head>
+<body>
+    <h1>🎮 Trivias de usuarios</h1>
+    <a href="/admin">← Volver al panel</a>
+
+    {% if por_usuario %}
+        {% for grupo in por_usuario %}
+        <h2>👤 {{ grupo["usuario"] }}</h2>
+        <table>
+            <tr><th>Trivia</th><th>Aciertos</th><th>Total</th><th>Fecha</th></tr>
+            {% for p in grupo["partidas"] %}
+            <tr>
+                <td>{{ p["trivia"] }}</td>
+                <td>{{ p["aciertos"] }}</td>
+                <td>{{ p["total"] }}</td>
+                <td>{{ p["fecha"] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
+    {% else %}
+    <p>Nadie ha jugado todavía. Las partidas aparecen aquí cuando un usuario termina una trivia.</p>
+    {% endif %}
+</body>
+</html>

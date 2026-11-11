@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin — Trivias</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #c5b565; padding: 8px; text-align: left; }
+        th { background: #ffe08a; }
+        form.inline { display: inline; }
+        input { padding: 4px; width: 130px; }
+        button { background: #8a6d00; color: white; border: none; padding: 4px 10px; cursor: pointer; }
+        a.boton-eliminar { color: #b30000; }
+    </style>
+</head>
+<body>
+    <h1>📋 Trivias</h1>
+    <a href="/admin">← Volver al panel</a>
+
+    {% if generos %}
+    <table>
+        <tr><th>Género</th><th>Preguntas</th><th>Partidas jugadas</th><th>Acciones</th></tr>
+        {% for g in generos %}
+        <tr>
+            <td>{{ g["genero"] }}</td>
+            <td>{{ g["preguntas"] }}</td>
+            <td>{{ g["partidas"] }}</td>
+            <td>
+                <form class="inline" action="/admin/trivias" method="get" autocomplete="off">
+                    <input type="hidden" name="renombrar_id" value="{{ g['id'] }}">
+                    <input type="text" name="nuevo_genero" value="{{ g['genero'] }}" required>
+                    <button type="submit">✏️ Renombrar</button>
+                </form>
+                <a class="boton-eliminar" href="/admin/trivias/{{ g['id'] }}/eliminar">🗑️ Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p><em>⚠️ Al eliminar una trivia también se borran sus preguntas.</em></p>
+    {% else %}
+    <p>No hay trivias registradas. Crea una pregunta en <a href="/crear">Crear pregunta</a>.</p>
+    {% endif %}
+</body>
+</html>

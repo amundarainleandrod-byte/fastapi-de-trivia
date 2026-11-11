@@ -9,6 +9,14 @@
         input { padding: 6px; width: 250px; }
         button { background: #8a6d00; color: white; border: none; padding: 8px 16px; cursor: pointer; }
         .marcador { background: white; border: 1px solid #c5b565; padding: 8px 15px; display: inline-block; }
+        .jugador { background: white; border: 1px dashed #8a6d00; padding: 8px 15px; display: inline-block; }
+        .opciones { margin-top: 15px; }
+        a.opcion {
+            display: block; width: 400px; margin-bottom: 8px;
+            background: white; border: 1px solid #c5b565;
+            padding: 10px 15px; text-decoration: none; color: #333;
+        }
+        a.opcion:hover { background: #fff3c4; }
     </style>
 </head>
 <body>
@@ -16,20 +24,31 @@
     <a href="/">← Volver al inicio</a>
 
     {% if not jugando %}
+        {% if usuario %}
+            <p class="jugador">👤 Jugador: <strong>{{ usuario }}</strong> (<a href="/jugar">cambiar</a>)</p>
+        {% else %}
+            <p>Para guardar tus resultados, escribe tu nombre (o <a href="/registro">regístrate</a>):</p>
+            <form action="/jugar" method="get" autocomplete="off">
+                <input type="text" name="usuario" placeholder="Tu nombre" required>
+                <button type="submit">Guardar jugador</button>
+            </form>
+        {% endif %}
+
         <h2>Elige cómo jugar</h2>
 
         <form action="/jugar" method="get" autocomplete="off">
+            <input type="hidden" name="usuario" value="{{ usuario }}">
             <input type="text" name="genero" placeholder="Nombre del género">
             <button type="submit">Jugar con ese género</button>
         </form>
 
-        <p>o <a href="/jugar?todas=1">▶️ Jugar con todas las preguntas</a></p>
+        <p>o <a href="/jugar?todas=1&usuario={{ usuario | urlencode }}">▶️ Jugar con todas las preguntas</a></p>
 
         {% if generos %}
         <p>Géneros disponibles:</p>
         <ul>
             {% for g in generos %}
-            <li><a href="/jugar?genero={{ g | urlencode }}">{{ g }}</a></li>
+            <li><a href="/jugar?genero={{ g | urlencode }}&usuario={{ usuario | urlencode }}">{{ g }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
@@ -45,26 +64,28 @@
         {% else %}
             <h2>🎉 ¡Juego terminado!</h2>
             <p>Acertaste <strong>{{ aciertos }}</strong> de <strong>{{ total }}</strong> preguntas.</p>
+            {% if usuario %}
+            <p>Resultado guardado para <strong>{{ usuario }}</strong>.</p>
+            {% endif %}
         {% endif %}
         <p>
-            <a href="/jugar?genero={{ genero | urlencode }}&todas={{ todas }}&pos=0&aciertos=0">🔄 Jugar otra vez</a> |
+            <a href="/jugar?genero={{ genero | urlencode }}&todas={{ todas }}&pos=0&aciertos=0&usuario={{ usuario | urlencode }}">🔄 Jugar otra vez</a> |
             <a href="/jugar">Menú de juego</a>
         </p>
 
     {% elif pregunta %}
+        {% if usuario %}
+        <p class="jugador">👤 Jugador: <strong>{{ usuario }}</strong></p>
+        {% endif %}
         <div class="marcador">Pregunta {{ pos + 1 }} de {{ total }} — Aciertos: {{ aciertos }}</div>
 
-        <form action="/jugar/responder" method="get" autocomplete="off">
-            <input type="hidden" name="pregunta_id" value="{{ pregunta['id'] }}">
-            <input type="hidden" name="pos" value="{{ pos }}">
-            <input type="hidden" name="aciertos" value="{{ aciertos }}">
-            {% if genero %}<input type="hidden" name="genero" value="{{ genero }}">{% endif %}
-            {% if todas %}<input type="hidden" name="todas" value="{{ todas }}">{% endif %}
+        <h2>{{ pregunta["pregunta"] }}</h2>
 
-            <h2>{{ pregunta["pregunta"] }}</h2>
-            <input type="text" name="respuesta" required placeholder="Tu respuesta">
-            <button type="submit">Responder</button>
-        </form>
+        <div class="opciones">
+            {% for o in opciones %}
+            <a class="opcion" href="{{ o["url"] }}">{{ o["texto"] }}</a>
+            {% endfor %}
+        </div>
     {% endif %}
 </body>
 </html>

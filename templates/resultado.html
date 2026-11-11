@@ -17,12 +17,16 @@
         <p>"{{ respuesta_jugador }}" es la respuesta buena.</p>
     {% else %}
         <h2>❌ Incorrecto</h2>
-        <p>Tu respuesta fue "{{ respuesta_jugador }}"; la correcta era <strong>"{{ respuesta_correcta }}"</strong>.</p>
+        <p>Elegiste "{{ respuesta_jugador }}"; la correcta era <strong>"{{ respuesta_correcta }}"</strong>.</p>
     {% endif %}
 
     <p>
         <a href="{{ siguiente_url }}">➡️ Siguiente pregunta</a> |
         <a href="/jugar">Menú de juego</a>
     </p>
+
+    {% if partida_guardada and usuario %}
+    <p>💾 Resultado guardado para <strong>{{ usuario }}</strong>.</p>
+    {% endif %}
 </body>
 </html>

@@ -19,8 +19,17 @@
         <label for="nuevo_pregunta">Pregunta</label>
         <input type="text" id="nuevo_pregunta" name="nuevo_pregunta" value="{{ q['pregunta'] }}">
 
-        <label for="nuevo_respuesta">Respuesta</label>
+        <label for="nuevo_respuesta">Respuesta correcta</label>
         <input type="text" id="nuevo_respuesta" name="nuevo_respuesta" value="{{ q['respuesta'] }}">
+
+        <label for="incorrecta1">Respuesta incorrecta 1 (opcional)</label>
+        <input type="text" id="incorrecta1" name="incorrecta1" value="{{ q['incorrecta1'] or '' }}">
+
+        <label for="incorrecta2">Respuesta incorrecta 2 (opcional)</label>
+        <input type="text" id="incorrecta2" name="incorrecta2" value="{{ q['incorrecta2'] or '' }}">
+
+        <label for="incorrecta3">Respuesta incorrecta 3 (opcional)</label>
+        <input type="text" id="incorrecta3" name="incorrecta3" value="{{ q['incorrecta3'] or '' }}">
 
         <label for="nueva_genero">Género</label>
         <input type="text" id="nueva_genero" name="nueva_genero" value="{{ q['trivia'] }}">

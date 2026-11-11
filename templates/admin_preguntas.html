@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin — Preguntas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #c5b565; padding: 8px; text-align: left; }
+        th { background: #ffe08a; }
+        input { padding: 6px; width: 250px; }
+        button { background: #8a6d00; color: white; border: none; padding: 6px 14px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>❓ Preguntas</h1>
+    <a href="/admin">← Volver al panel</a>
+
+    <form action="/admin/preguntas" method="get" autocomplete="off">
+        <input type="text" name="genero" value="{{ genero }}" placeholder="Filtrar por género">
+        <button type="submit">Filtrar</button>
+        {% if genero %}
+        <a href="/admin/preguntas">Quitar filtro</a>
+        {% endif %}
+    </form>
+
+    <p><a href="/crear">➕ Crear pregunta</a></p>
+
+    {% if questions %}
+    <table>
+        <tr><th>ID</th><th>Pregunta</th><th>Respuesta correcta</th><th>Incorrectas</th><th>Género</th><th>Acciones</th></tr>
+        {% for q in questions %}
+        <tr>
+            <td>{{ q["id"] }}</td>
+            <td>{{ q["pregunta"] }}</td>
+            <td>{{ q["respuesta"] }}</td>
+            <td>
+                {% if q["incorrecta1"] %}• {{ q["incorrecta1"] }}{% endif %}
+                {% if q["incorrecta2"] %}<br>• {{ q["incorrecta2"] }}{% endif %}
+                {% if q["incorrecta3"] %}<br>• {{ q["incorrecta3"] }}{% endif %}
+                {% if not q["incorrecta1"] and not q["incorrecta2"] and not q["incorrecta3"] %}
+                <em>(automáticas)</em>
+                {% endif %}
+            </td>
+            <td>{{ q["trivia"] }}</td>
+            <td>
+                <a href="/questions/{{ q['id'] }}/editar">✏️ Editar</a>
+                <a href="/questions/{{ q['id'] }}/eliminar?volver=admin">🗑️ Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No hay preguntas registradas{% if genero %} para el género "{{ genero }}"{% endif %}.</p>
+    {% endif %}
+</body>
+</html>

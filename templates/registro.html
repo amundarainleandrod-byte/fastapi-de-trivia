@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivias — Registro</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #fdf6e3; }
+        h1 { color: #8a6d00; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input { padding: 6px; width: 250px; }
+        button { background: #8a6d00; color: white; border: none; padding: 8px 16px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>👤 Registro de usuario</h1>
+    <a href="/">← Volver al inicio</a>
+
+    {% if mensaje %}
+    <p><strong>{{ mensaje }}</strong></p>
+    {% endif %}
+
+    {% if registrado %}
+    <p><a href="/jugar?usuario={{ nombre | urlencode }}">🎮 Jugar como {{ nombre }}</a></p>
+    {% endif %}
+
+    <form action="/registro" method="get" autocomplete="off">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <button type="submit">Registrarme</button>
+    </form>
+</body>
+</html>
